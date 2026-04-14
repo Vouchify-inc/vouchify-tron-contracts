@@ -58,9 +58,8 @@ What has already been done:
 
 ## Immediate Risks
 
-1. The escrow and membership flows currently record `tx.origin`. That is a weak pattern on any EVM-compatible chain and should be removed or redesigned before Tron deployment.
-2. The factories rely on deterministic clones. Address prediction behavior must be validated on Tron testnet before using predicted addresses operationally.
-3. Deployment and verification on Tron should be treated as a separate track from the current Ethereum-style Foundry deployment flow.
+1. The factories rely on deterministic clones, so predicted-versus-actual address behavior must still be validated on Tron testnet before those predictions are treated as authoritative.
+2. Deployment and verification on Tron should be treated as a separate track from the current Ethereum-style Foundry deployment flow.
 
 ## Working Rules For This Repo
 
