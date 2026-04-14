@@ -48,7 +48,7 @@ That is promising for Tron-compatible tokens, but actual token contracts used on
 
 ## First implementation priorities
 
-1. Build and run the existing Foundry tests inside this repo.
+1. Compile and migrate through TronBox rather than Foundry.
 2. Add Tron environment examples and deployment placeholders.
 3. Validate deterministic clone behavior on Tron testnet.
 4. Review token-standard and verification constraints for Tron deployment.

@@ -8,28 +8,20 @@ Deploy the existing Vouchify Solidity contracts to a Tron testnet with the fewes
 
 ## Current position
 
-- The contracts compile successfully in this repository.
-- The copied Foundry test suite passes locally.
-- The deployment toolchain for Tron is still undecided.
-- A dedicated validation script now exists at `script/ValidateTronTestnet.s.sol`.
+- The contracts compile successfully with TronBox.
+- The repo now uses TronBox migrations instead of Foundry scripts.
 - Shasta is the preferred first validation network if funded wallets and funded test USDT already exist there.
+- A Shasta migration attempt now reaches the broadcast stage in TronBox.
 
 ## Deployment track
 
 ### Phase 1. Select the Tron deployment path
 
-Candidate options to evaluate:
+Selected path:
 
-1. Keep Foundry for compilation and use a Tron-specific deploy script or SDK for broadcasting.
-2. Add a Tron-native deployment layer and keep Foundry only for local compile and test work.
-3. Use a hybrid flow where Foundry produces artifacts and Tron tooling handles deployment and verification.
-
-Decision criteria:
-
-- reliable testnet deployment
-- support for constructor arguments and linked deployments
-- ability to verify contracts in the target explorer
-- operational simplicity for repeat deployments
+1. Use TronBox as the compile and migration tool for TRON networks.
+2. Keep Solidity contracts in `src/` and point TronBox at that directory with `contracts_directory`.
+3. Use JavaScript migrations under `migrations/` for deployment and validation.
 
 ### Phase 2. Validate one end-to-end deployment on testnet
 
@@ -49,13 +41,13 @@ Success criteria:
 Recommended first validation command:
 
 ```sh
-forge script script/ValidateTronTestnet.s.sol:ValidateTronTestnet --rpc-url tron_shasta --broadcast
+tronbox migrate --network shasta --reset --compile-all
 ```
 
 Fallback option if Shasta is unavailable in your environment:
 
 ```sh
-forge script script/ValidateTronTestnet.s.sol:ValidateTronTestnet --rpc-url tron_nile --broadcast
+tronbox migrate --network nile --reset --compile-all
 ```
 
 Required environment values:
@@ -77,6 +69,12 @@ Validation scope of the script:
 4. validate predicted versus actual membership clone address
 5. validate predicted versus actual payment wallet clone address
 6. validate redemption attribution after the `tx.origin` removal
+
+Current blocker from the first Shasta run:
+
+- Tron accepted the network configuration and reached contract broadcast.
+- The deployment then failed with `account does not exist` for the address derived from `PRIVATE_KEY`.
+- This means the current blocker is the selected deployer account on Shasta, not the TronBox configuration format.
 
 Important constraint:
 
@@ -102,6 +100,6 @@ Verification still needs a concrete tool decision. At minimum, the selected flow
 
 ## Blocking questions
 
-1. Confirm the exact Shasta RPC/provider and funded Shasta USDT contract address to use for the first validation run.
-2. Which deployment path has the least operational friction for this codebase?
+1. Confirm that the address derived from `PRIVATE_KEY` is the funded and activated Shasta account you intend to use.
+2. Confirm the exact Shasta USDT contract address to use for the first validation run.
 3. What explorer verification constraints apply to clone-based deployments on Tron?

@@ -15,9 +15,9 @@ The goal is not to rewrite the protocol. The goal is to preserve the existing bu
 
 ### Step 2. Add Tron-specific configuration
 
-- [x] Add Tron RPC placeholders to Foundry config for research and local validation
+- [x] Add TronBox network configuration for Shasta, Nile, and mainnet
 - [x] Add environment examples for Tron deployment
-- [ ] Decide on the final deployment toolchain for Tron testnet and mainnet
+- [x] Switch the repo from Foundry entrypoints to TronBox
 
 ### Step 3. Audit the contracts for chain-specific risks
 
@@ -30,16 +30,16 @@ The goal is not to rewrite the protocol. The goal is to preserve the existing bu
 
 ### Step 4. Validate the codebase locally
 
-- [x] Build the copied contracts in this repository
-- [x] Run the existing Foundry test suite here
-- [ ] Separate generic EVM failures from Tron-specific failures
+- [x] Compile the copied contracts with TronBox
+- [x] Reach Shasta with a real TronBox migration attempt
+- [x] Separate toolchain misconfiguration from network/account issues
 
 ### Step 5. Prepare deployment and verification flow
 
 - [x] Create initial Tron deployment notes
-- [ ] Create Tron deployment scripts
+- [x] Create TronBox migration scripts
 - [ ] Define verification steps for Tron explorer tooling
-- [ ] Deploy first to Tron Nile/Shasta-equivalent supported testnet
+- [ ] Complete the first successful Shasta deployment
 
 ## Current Status
 
@@ -48,27 +48,27 @@ Work started on steps 1 through 3.
 What has already been done:
 
 - The source contracts repository has been copied into this folder.
-- Tron RPC placeholders have been added to the config.
+- TronBox configuration and migrations have been added to the repo.
 - A Tron `.env.example` template has been added.
 - Initial migration risks have been documented in `MIGRATION_NOTES.md`.
 - Redemption attribution now records the trusted factory caller instead of using `tx.origin`.
 - Deterministic clone assumptions are documented in `TRON_CLONE_AUDIT.md`.
-- The copied baseline compiles successfully with Foundry.
-- The copied Foundry test suite passes in this repository.
+- TronBox compile succeeds against the copied contract set.
+- A real Shasta migration attempt now reaches the broadcast step.
 
 ## Immediate Risks
 
 1. The factories rely on deterministic clones, so predicted-versus-actual address behavior must still be validated on Tron testnet before those predictions are treated as authoritative.
-2. Deployment and verification on Tron should be treated as a separate track from the current Ethereum-style Foundry deployment flow.
+2. The current Shasta deployment is blocked by the deployer account derived from `PRIVATE_KEY`, which Tron reports as not existing on Shasta.
 
 ## Working Rules For This Repo
 
 1. Keep protocol logic as close as possible to `vouchify-contracts` until a Tron-specific incompatibility is proven.
-2. Prefer additive Tron-specific scripts and docs over invasive rewrites.
-3. Do not assume that a successful local Foundry build implies Tron deployability.
+2. Use TronBox as the deployment and migration entrypoint for TRON networks.
+3. Do not assume that a successful local compile implies the configured Shasta deployer account is funded or activated.
 
 ## Next Actions
 
-1. Choose the concrete Tron deployment toolchain and wire scripts around it.
-2. Validate deterministic clone behavior on Tron testnet.
+1. Confirm that the address derived from `PRIVATE_KEY` is the funded Shasta deployer account you expect.
+2. Complete the Shasta validation migration and compare predicted versus actual clone addresses on-chain.
 3. Review Tron token standard and explorer verification constraints.
