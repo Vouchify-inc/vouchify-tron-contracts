@@ -50,8 +50,9 @@ interface IVouchifyMembership {
     function activate() external;
 
     /// @notice Redeem one credit from the membership
+    /// @param redeemedBy Operator address responsible for the redemption
     /// @return remaining Number of credits remaining after redemption
-    function redeemCredit() external returns (uint256 remaining);
+    function redeemCredit(address redeemedBy) external returns (uint256 remaining);
 
     /// @notice Mark membership as expired
     function expire() external;

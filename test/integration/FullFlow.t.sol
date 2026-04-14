@@ -194,6 +194,9 @@ contract FullFlowTest is Test {
         assertEq(r1.amount, firstRedeem);
         assertEq(r2.amount, secondRedeem);
         assertEq(r3.amount, thirdRedeem);
+        assertEq(r1.redeemedBy, operator);
+        assertEq(r2.redeemedBy, operator);
+        assertEq(r3.redeemedBy, operator);
         
         vm.stopPrank();
     }

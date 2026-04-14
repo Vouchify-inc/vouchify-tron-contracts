@@ -22,7 +22,9 @@ The goal is not to rewrite the protocol. The goal is to preserve the existing bu
 ### Step 3. Audit the contracts for chain-specific risks
 
 - [x] Identify `tx.origin` usage that should not survive the migration unchanged
+- [x] Refactor redemption attribution to remove `tx.origin`
 - [x] Identify deterministic clone deployment paths that need Tron validation
+- [x] Document deterministic clone assumptions before Tron deployment
 - [ ] Review token standard assumptions around ERC-20/ERC-721 vs Tron usage
 - [ ] Confirm whether any contract depends on Ethereum-only runtime behavior
 
@@ -49,6 +51,8 @@ What has already been done:
 - Tron RPC placeholders have been added to the config.
 - A Tron `.env.example` template has been added.
 - Initial migration risks have been documented in `MIGRATION_NOTES.md`.
+- Redemption attribution now records the trusted factory caller instead of using `tx.origin`.
+- Deterministic clone assumptions are documented in `TRON_CLONE_AUDIT.md`.
 - The copied baseline compiles successfully with Foundry.
 - The copied Foundry test suite passes in this repository.
 
@@ -67,5 +71,5 @@ What has already been done:
 ## Next Actions
 
 1. Choose the concrete Tron deployment toolchain and wire scripts around it.
-2. Start replacing or redesigning the `tx.origin` redemption tracking path.
-3. Validate deterministic clone behavior on Tron testnet.
+2. Validate deterministic clone behavior on Tron testnet.
+3. Review Tron token standard and explorer verification constraints.

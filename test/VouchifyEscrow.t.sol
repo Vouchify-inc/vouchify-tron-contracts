@@ -105,6 +105,10 @@ contract VouchifyEscrowTest is Test {
         assertEq(escrow.remainingAmount(), AMOUNT - redeemAmount);
         assertEq(uint256(escrow.status()), uint256(VouchifyTypes.EscrowStatus.PARTIALLY_REDEEMED));
         assertEq(escrow.getRedemptionCount(), 1);
+
+        VouchifyTypes.Redemption memory redemption = escrow.getRedemption(0);
+        assertEq(redemption.amount, redeemAmount);
+        assertEq(redemption.redeemedBy, operator);
         
         vm.stopPrank();
     }

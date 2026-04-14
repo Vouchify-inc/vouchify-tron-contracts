@@ -130,15 +130,16 @@ contract VouchifyMembership is IVouchifyMembership {
     }
 
     /// @inheritdoc IVouchifyMembership
-    function redeemCredit() external override onlyFactory whenActive notExpired returns (uint256 remaining) {
+    function redeemCredit(address redeemedBy_) external override onlyFactory whenActive notExpired returns (uint256 remaining) {
         if (_remainingCredits == 0) revert VouchifyErrors.NoCreditsRemaining();
+        if (redeemedBy_ == address(0)) revert VouchifyErrors.ZeroAddress();
 
         _remainingCredits -= 1;
 
         // Record redemption
         _redemptions.push(VouchifyTypes.CreditRedemption({
             timestamp: block.timestamp,
-            redeemedBy: tx.origin // The merchant who initiated
+            redeemedBy: redeemedBy_
         }));
 
         // Update status
@@ -146,7 +147,7 @@ contract VouchifyMembership is IVouchifyMembership {
             _status = VouchifyTypes.MembershipStatus.FULLY_USED;
         }
 
-        emit CreditRedeemed(_remainingCredits, tx.origin);
+        emit CreditRedeemed(_remainingCredits, redeemedBy_);
 
         return _remainingCredits;
     }

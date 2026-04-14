@@ -139,7 +139,7 @@ contract VouchifyEscrowFactory is IVouchifyEscrowFactory, AccessControl, Pausabl
         address escrowAddress = _escrowsByVoucherId[voucherId];
         if (escrowAddress == address(0)) revert VouchifyErrors.EscrowNotFound();
         
-        remaining = IVouchifyEscrow(escrowAddress).redeem(amount);
+        remaining = IVouchifyEscrow(escrowAddress).redeem(amount, msg.sender);
         
         // Record redemption on NFT
         uint256 tokenId_ = IVouchifyEscrow(escrowAddress).tokenId();

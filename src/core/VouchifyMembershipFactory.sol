@@ -135,13 +135,13 @@ contract VouchifyMembershipFactory is IVouchifyMembershipFactory, AccessControl,
         address membershipAddress = _membershipsByMembershipId[membershipId_];
         if (membershipAddress == address(0)) revert VouchifyErrors.MembershipNotFound();
 
-        remaining = IVouchifyMembership(membershipAddress).redeemCredit();
+        remaining = IVouchifyMembership(membershipAddress).redeemCredit(msg.sender);
 
         // Record redemption on NFT
         uint256 tokenId_ = IVouchifyMembership(membershipAddress).tokenId();
         IVouchifyVoucher(_voucherContract).recordRedemption(tokenId_, 1, remaining);
 
-        emit CreditRedeemed(membershipId_, remaining, tx.origin);
+        emit CreditRedeemed(membershipId_, remaining, msg.sender);
 
         return remaining;
     }

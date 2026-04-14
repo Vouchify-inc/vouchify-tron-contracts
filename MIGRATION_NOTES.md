@@ -6,13 +6,13 @@ This file tracks the first contract-level risks identified while moving the Soli
 
 ### 1. `tx.origin` usage
 
-The following files currently use `tx.origin` for redemption attribution:
+The following files previously used `tx.origin` for redemption attribution:
 
 - `src/core/VouchifyEscrow.sol`
 - `src/core/VouchifyMembership.sol`
 - `src/core/VouchifyMembershipFactory.sol`
 
-This should be treated as a migration blocker, not as a Tron feature. The likely fix is to pass the actor explicitly from the trusted caller path instead of reading transaction origin inside the contract.
+This was treated as a migration blocker, not as a Tron feature. The fix in this repo is to pass the trusted factory caller explicitly into the clone redemption functions instead of reading transaction origin inside the contract.
 
 ### 2. Deterministic clone deployment
 
@@ -29,6 +29,13 @@ Before production use on Tron:
 - compare predicted addresses against actual deployed addresses
 - verify explorer behavior for clone contracts
 
+Additional audit finding:
+
+- the current clone deployment flow depends entirely on OpenZeppelin `Clones.cloneDeterministic` and `predictDeterministicAddress`
+- the project does not implement its own CREATE2 math anywhere in application code
+- that is good for maintainability, but it means Tron compatibility rises or falls with how TVM handles the same deterministic deployment assumptions at runtime
+- do not trust `getEscrowAddress`, `getMembershipAddress`, or `getWalletAddress` on Tron until testnet validation proves predicted and actual addresses match
+
 ### 3. Token behavior to validate
 
 The payment wallet currently assumes standard ERC-20 style token behavior through OpenZeppelin interfaces and `SafeERC20`.
@@ -43,5 +50,5 @@ That is promising for Tron-compatible tokens, but actual token contracts used on
 
 1. Build and run the existing Foundry tests inside this repo.
 2. Add Tron environment examples and deployment placeholders.
-3. Refactor redemption attribution away from `tx.origin`.
-4. Validate deterministic clone behavior on Tron testnet.
+3. Validate deterministic clone behavior on Tron testnet.
+4. Review token-standard and verification constraints for Tron deployment.

@@ -132,9 +132,13 @@ contract VouchifyEscrow is IVouchifyEscrow {
     }
 
     /// @inheritdoc IVouchifyEscrow
-    function redeem(uint256 amount_) external override onlyFactory whenActive notExpired returns (uint256 remaining) {
+    function redeem(
+        uint256 amount_,
+        address redeemedBy_
+    ) external override onlyFactory whenActive notExpired returns (uint256 remaining) {
         if (amount_ == 0) revert VouchifyErrors.InvalidAmount();
         if (amount_ > _remainingAmount) revert VouchifyErrors.RedemptionAmountExceedsRemaining();
+        if (redeemedBy_ == address(0)) revert VouchifyErrors.ZeroAddress();
         
         _remainingAmount -= amount_;
         
@@ -142,7 +146,7 @@ contract VouchifyEscrow is IVouchifyEscrow {
         _redemptions.push(VouchifyTypes.Redemption({
             amount: amount_,
             timestamp: block.timestamp,
-            redeemedBy: tx.origin // The merchant who initiated
+            redeemedBy: redeemedBy_
         }));
         
         // Update status
@@ -153,7 +157,7 @@ contract VouchifyEscrow is IVouchifyEscrow {
             _status = VouchifyTypes.EscrowStatus.PARTIALLY_REDEEMED;
         }
         
-        emit Redeemed(amount_, _remainingAmount, tx.origin);
+        emit Redeemed(amount_, _remainingAmount, redeemedBy_);
         
         return _remainingAmount;
     }

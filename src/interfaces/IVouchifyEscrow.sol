@@ -57,8 +57,9 @@ interface IVouchifyEscrow {
     
     /// @notice Redeem voucher (full or partial)
     /// @param amount Amount to redeem
+    /// @param redeemedBy Operator address responsible for the redemption
     /// @return remaining Amount remaining after redemption
-    function redeem(uint256 amount) external returns (uint256 remaining);
+    function redeem(uint256 amount, address redeemedBy) external returns (uint256 remaining);
     
     /// @notice Refund the voucher to buyer
     function refund() external;
