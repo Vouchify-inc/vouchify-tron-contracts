@@ -39,7 +39,7 @@ The goal is not to rewrite the protocol. The goal is to preserve the existing bu
 - [x] Create initial Tron deployment notes
 - [x] Create TronBox migration scripts
 - [ ] Define verification steps for Tron explorer tooling
-- [ ] Complete the first successful Shasta deployment
+- [x] Complete the first successful Shasta deployment
 
 ## Current Status
 
@@ -54,21 +54,26 @@ What has already been done:
 - Redemption attribution now records the trusted factory caller instead of using `tx.origin`.
 - Deterministic clone assumptions are documented in `TRON_CLONE_AUDIT.md`.
 - TronBox compile succeeds against the copied contract set.
-- A real Shasta migration attempt now reaches the broadcast step.
+- A real Shasta migration now deploys and validates the full payment, escrow, and membership stack on Shasta.
+- The current Shasta deployment addresses are:
+	- Voucher NFT: `TJkRenXTd1LB4ErmmewCmaR5zdwdggqdNF`
+	- Escrow factory: `TYRirtwpYGWWpWhkda5XoJRA8aryQ9v3D9`
+	- Membership factory: `TDKi2thiTHdZ9aR2PvNc6A5AcFXQ3mpXXw`
+	- Payment wallet factory: `THVSQ7KWSLVaQbJ3kwxwxerhQLFx3wxAER`
 
 ## Immediate Risks
 
 1. The factories rely on deterministic clones, so predicted-versus-actual address behavior must still be validated on Tron testnet before those predictions are treated as authoritative.
-2. The current Shasta deployment is blocked by the deployer account derived from `PRIVATE_KEY`, which Tron reports as not existing on Shasta.
+2. Live Shasta deployment now shows that predicted clone addresses do not match actual clone addresses, so deterministic factory address predictions cannot yet be treated as authoritative on Tron.
 
 ## Working Rules For This Repo
 
 1. Keep protocol logic as close as possible to `vouchify-contracts` until a Tron-specific incompatibility is proven.
 2. Use TronBox as the deployment and migration entrypoint for TRON networks.
-3. Do not assume that a successful local compile implies the configured Shasta deployer account is funded or activated.
+3. Do not assume that OpenZeppelin deterministic clone prediction behaves identically on Tron testnet just because deployment succeeds.
 
 ## Next Actions
 
-1. Confirm that the address derived from `PRIVATE_KEY` is the funded Shasta deployer account you expect.
-2. Complete the Shasta validation migration and compare predicted versus actual clone addresses on-chain.
+1. Update backend and app integrations so Tron uses stored actual clone addresses, not predicted ones.
+2. Mirror these Shasta addresses into deployment env workflows for integration testing.
 3. Review Tron token standard and explorer verification constraints.

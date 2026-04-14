@@ -9,11 +9,13 @@
     "migrate:nile": "tronbox migrate --network nile --reset --compile-all",
     "test": "tronbox test --network development",
     "flatten:voucher": "tronbox flatten src/core/VouchifyVoucher.sol",
-    "derive:key": "node script/deriveTronKeyFromMnemonic.js"
+    "derive:key": "node script/deriveTronKeyFromMnemonic.js",
+    "send:usdt:shasta": "node script/sendShastaUsdt.js"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.6.1",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "tronweb": "^6.2.2"
   },
   "devDependencies": {
     "tronbox": "^4.6.0"

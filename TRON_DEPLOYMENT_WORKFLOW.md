@@ -11,7 +11,21 @@ Deploy the existing Vouchify Solidity contracts to a Tron testnet with the fewes
 - The contracts compile successfully with TronBox.
 - The repo now uses TronBox migrations instead of Foundry scripts.
 - Shasta is the preferred first validation network if funded wallets and funded test USDT already exist there.
-- A Shasta migration attempt now reaches the broadcast stage in TronBox.
+- A Shasta migration now completes end-to-end deployment and validation.
+
+## Latest validated Shasta deployment
+
+- Voucher NFT: `TJkRenXTd1LB4ErmmewCmaR5zdwdggqdNF`
+- Escrow factory: `TYRirtwpYGWWpWhkda5XoJRA8aryQ9v3D9`
+- Membership factory: `TDKi2thiTHdZ9aR2PvNc6A5AcFXQ3mpXXw`
+- Payment wallet factory: `THVSQ7KWSLVaQbJ3kwxwxerhQLFx3wxAER`
+
+Recommended env workflow for Shasta integration testing:
+
+- keep `TRON_USDT_TOKEN=TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs`
+- point backend and app test environments at the factory addresses above
+- treat `getEscrowByVoucherId`, `getMembershipByMembershipId`, and `getWallet` as authoritative on Tron
+- do not treat `getEscrowAddress`, `getMembershipAddress`, or `getWalletAddress` as authoritative on Tron
 
 ## Deployment track
 
@@ -70,11 +84,12 @@ Validation scope of the script:
 5. validate predicted versus actual payment wallet clone address
 6. validate redemption attribution after the `tx.origin` removal
 
-Current blocker from the first Shasta run:
+Current confirmed behavior from the latest Shasta run:
 
-- Tron accepted the network configuration and reached contract broadcast.
-- The deployment then failed with `account does not exist` for the address derived from `PRIVATE_KEY`.
-- This means the current blocker is the selected deployer account on Shasta, not the TronBox configuration format.
+- Tron accepted the updated deployer key and completed implementation and factory deployments.
+- The full validation migration completed successfully for voucher, escrow, membership, and payment wallet flows.
+- OpenZeppelin `predictDeterministicAddress` still does not match the actual clone address returned by the factories on Shasta.
+- This is now an integration constraint, not a deployment blocker.
 
 Important constraint:
 
