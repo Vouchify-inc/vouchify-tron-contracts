@@ -11,6 +11,7 @@ Deploy the existing Vouchify Solidity contracts to a Tron testnet with the fewes
 - The contracts compile successfully in this repository.
 - The copied Foundry test suite passes locally.
 - The deployment toolchain for Tron is still undecided.
+- A dedicated validation script now exists at `script/ValidateTronTestnet.s.sol`.
 
 ## Deployment track
 
@@ -43,6 +44,37 @@ Success criteria:
 - admin and operator roles are assigned correctly
 - factory can create an escrow clone
 - predicted address and actual address match if deterministic deployment is claimed
+
+Recommended first validation command:
+
+```sh
+forge script script/ValidateTronTestnet.s.sol:ValidateTronTestnet --rpc-url tron_nile --broadcast
+```
+
+Required environment values:
+
+- `PRIVATE_KEY`
+- `ADMIN_WALLET`
+- `COLD_WALLET`
+- `TRON_USDT_TOKEN`
+- `VALIDATION_BUYER`
+- `VALIDATION_MERCHANT_ID`
+- `VALIDATION_PAYMENT_AMOUNT`
+- `VALIDATION_MEMBERSHIP_CREDITS`
+
+Validation scope of the script:
+
+1. deploy escrow, membership, payment wallet implementations and factories
+2. link voucher and factory roles
+3. validate predicted versus actual escrow clone address
+4. validate predicted versus actual membership clone address
+5. validate predicted versus actual payment wallet clone address
+6. validate redemption attribution after the `tx.origin` removal
+
+Important constraint:
+
+- the script assumes Tron USDT is the only ERC-20 payment token in scope
+- it does not validate native TRX payment flows, because TRX is only needed for deployment fees
 
 ### Phase 3. Expand to the full contract set
 
