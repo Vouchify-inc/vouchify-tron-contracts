@@ -7,6 +7,7 @@
     "compile": "tronbox compile --all",
     "migrate:shasta": "tronbox migrate --network shasta --reset --compile-all",
     "migrate:nile": "tronbox migrate --network nile --reset --compile-all",
+    "migrate:mainnet": "tronbox migrate --network mainnet --reset --compile-all",
     "test": "tronbox test --network development",
     "flatten:voucher": "tronbox flatten src/core/VouchifyVoucher.sol",
     "derive:key": "node script/deriveTronKeyFromMnemonic.js",
